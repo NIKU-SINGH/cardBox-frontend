@@ -1,6 +1,11 @@
 import axios from 'axios'
 import React from 'react'
-const URL = 'http://localhost:8000'
+import { deleteItems } from '@/redux/cardSlice'
+import { useDispatch } from 'react-redux'
+import store from '@/redux/store'
+
+// const URL = 'http://localhost:8000'
+import server_url from '@/config/config'
 
 
 const Card = (props: {
@@ -12,15 +17,22 @@ const Card = (props: {
   }
 
 }) => {
-
+  const dispatch = useDispatch();
   const handleDelete = async (id:number) => {
     try{
-      const res = await axios.delete(`${URL}/cards/${id}`)
-      console.log("deleted item is",res)
+      const res = await axios.delete(`${server_url}/cards/${id}`)
+      dispatch(deleteItems(id))
+      // console.log("deleted item is",res)
+      console.log("state after delete",store.getState())
+
     } catch(err){
       console.log(err)
     }
   }
+
+  // console.log("state after delete",store.getState())
+  const id = props.data.link.split("=")[1]
+  console.log("id",id)
   return (
     <div className=''>
       <div className="w-full md:w-auto m-4">
@@ -40,7 +52,8 @@ const Card = (props: {
                 <div className="relative block ">
                   <div className="bg-gray-100 h-auto rounded-lg">
                     <iframe width="560" height="315"
-                      src="https://www.youtube.com/embed/DKzBmRRdPXo"
+                      // src="https://www.youtube.com/embed/DKzBmRRdPXo"
+                      src={`https://www.youtube.com/embed/${id}`}
                       title="YouTube video player"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

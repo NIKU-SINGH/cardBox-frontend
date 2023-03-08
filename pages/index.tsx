@@ -22,6 +22,8 @@ type card = {
 
 export default function Home() {
   const [cardData, setCardData] = useState<any>();
+  // const [cardData,setCardData] = useState()
+  // const cardData = store.getState().card.data.push
   const [entertainment, setEntertainment] = useState<any>();
   const [education, setEducation] = useState<any>();
   const dispatch = useDispatch()
@@ -30,8 +32,9 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const res = await axios.get(`${server_url}/cards`)
-        setCardData(res.data);
-        dispatch(addItems(res.data))
+        setCardData(res.data)
+        const ans =dispatch(addItems(res.data))
+        console.log("ans",ans.payload)
       } catch (err) {
         console.log("error is here", err)
       }
@@ -39,6 +42,7 @@ export default function Home() {
     fetchData()
   }, [])
 
+console.log("data is",store.getState())
   return (
     <>
       <Head>

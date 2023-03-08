@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-// import server_url from '../config/config'
+import server_url from '../config/config'
 
-const server_url = 'http://localhost:8000'
+// const server_url = 'http://localhost:8000'
 const Create = () => {
     const [title, setTitle] = useState<string>();
     const [type, setType] = useState<string>();
