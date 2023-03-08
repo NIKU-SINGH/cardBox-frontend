@@ -2,10 +2,43 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-
+import Navbar from '../components/Navbar'
+import Card from '@/components/Card'
+import BigCard from '@/components/BigCard'
+import axios from 'axios';
+import { useEffect, useState } from 'react'
+import server_url from '../config/config'
+import store from '../redux/store'
+import { addItems, deleteItems, updateItems } from '@/redux/cardSlice'
 const inter = Inter({ subsets: ['latin'] })
+import { useDispatch } from 'react-redux'
+
+type card = {
+  id: number,
+  title: string,
+  type: string,
+  link: string,
+}
 
 export default function Home() {
+  const [cardData, setCardData] = useState<any>();
+  const [entertainment, setEntertainment] = useState<any>();
+  const [education, setEducation] = useState<any>();
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${server_url}/cards`)
+        setCardData(res.data);
+        dispatch(addItems(res.data))
+      } catch (err) {
+        console.log("error is here", err)
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
     <>
       <Head>
@@ -14,109 +47,39 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+      <main>
+        <Navbar />
+
+        <div className='mt-24 mx-10 font-manrope'>
+          <div className="bg-white p-2 flex justify-start items-start flex-wrap rounded-full">
+            <span className="inline-flex items-center m-2 px-2 py-1 bg-yellow-200 hover:bg-gray-300 rounded-full text-sm font-semibold text-gray-600">
+              <span className="ml-1">
+                Entertainment
+              </span>
+            </span>
+            <span
+              // onClick={fetchData}
+              className="inline-flex items-center m-2 px-4 py-1 bg-red-300 hover:bg-red-500 rounded-full text-sm font-semibold text-gray-600">
+              <span className="ml-1 flex cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <p>Delete All</p>
+              </span>
+            </span>
+          </div>
+
+          <div className='flex justify-center flex-wrap'>
+            {
+              cardData?.map((content: card, id: number) => (
+                <Card key={id} data={content} />
+              ))
+            }
           </div>
         </div>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
 
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+        {/* <BigCard /> */}
       </main>
     </>
   )
