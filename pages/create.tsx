@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 // import server_url from '../config/config'
 
 const server_url = 'http://localhost:8000'
-const create = () => {
+const Create = () => {
     const [title, setTitle] = useState<string>();
     const [type, setType] = useState<string>();
     const [link, setLink] = useState<string>();
@@ -83,4 +83,4 @@ const create = () => {
     )
 }
 
-export default create
+export default Create
